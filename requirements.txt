@@ -1,0 +1,8 @@
+flask=2.2.2
+Werkzeug=2.2.2
+pymongo=4.3.2
+python-dotenv=0.20.0
+pandas=1.4.3
+bson=0.5.10
+dvc
+dvc[s3]
