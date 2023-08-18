@@ -9,7 +9,6 @@ os.environ['PATH'] = 'C://Python310/Scripts/pip'
 
 app = Flask(__name__)
 
-
 app.register_blueprint(data_source_controller, url_prefix='/data-source')
 app.register_blueprint(query_controller, url_prefix='/query')
 

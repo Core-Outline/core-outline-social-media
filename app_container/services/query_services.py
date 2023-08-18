@@ -1,6 +1,7 @@
 from app_container.repositories.database import createClient, create, get, fetch
 from config.query_config import query_actions, queries_table
 from app_container.services.data_source_service import DataSourceService
+from app_container.repositories.selenium import instagram_user_engagement
 import pandas as pd
 import subprocess
 
@@ -18,19 +19,11 @@ class QueryService():
     def fetch_queries(self, query):
         return get(self.db, queries_table, query)
 
-    def execute_query(self, query):
+    def insta_user_engagement(self, query):
         dataSourceService = DataSourceService()
         dataSource = dataSourceService.get_data_source_by_id(query)
-        latestCommit = dataSource['commit']
-        subprocess.run(['bash', 'dvc_usage.sh', latestCommit])
-        queries = query.queries
 
-        data = pd.read_csv('app/scripts/file.csv')
-        for q in queries:
-            column = q.keys[0]
-            operation = q[column].keys[0]
-            value = q[column][operation]
-
-            data = data.loc[query_actions[operation](data[column], value)]
+        if(dataSource['subtype'] == 'instagram'):
+            data = instagram_user_engagement(dataSource['username'])
 
         return data

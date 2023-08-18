@@ -10,14 +10,6 @@ class DataSourceService():
         self.db = createClient()
 
     def create_data_source(self, data_source):
-        base64.to_csv(data_source['file'])
-        os.chdir(f"{os.getcwd()}/app_container/scripts")
-        print(os.getcwd())
-        # latestCommit = subprocess.run( ['bash', 'dvc_upload.sh'], text=True, capture_output=True)
-        latestCommit = os.popen('bash dvc_upload.sh').read()
-        print("This is the commit", latestCommit)
-        os.chdir(os.getcwd())
-        data_source['hash'] = latestCommit
         return create(self.db, data_source_table, data_source)
 
     def get_data_source_by_id(self, data_source):

@@ -22,8 +22,8 @@ def get_query():
     params = dict(request.args)
     return jsonify(query.get(params))
 
-
-@query_controller.route('/execute-query', methods=['GET'])
-def execute_query():
-    req = request.get_json()
-    return jsonify(query.execute(req))
+@query_controller.route('/insta-user-engagement', methods=['GET'])
+def instagram_user_engagement():
+    params = dict(request.args)
+    print(params)
+    return jsonify(query.instaUserEngagement(params))

@@ -13,13 +13,20 @@ def createClient():
 
 def create(db, collection, document):
     output = db[collection].insert_one(document)
-    return output.inserted_id
+    return {"_id": str(output.inserted_id)}
 
 
 def get(db, collection, condition):
-    return db[collection].find_one({'_id': ObjectId(condition['_id'])})
+    obj = db[collection].find_one({'_id': ObjectId(condition['_id'])})
+    print(obj)
+    return {**obj, "_id": str(obj['_id'])}
 
 
-def fetch(db, collection, conditions):
-    docs = db[collection].find(conditions)
-    return [doc for doc in docs]
+def fetch(db, collection, array_of_conditions):
+    docs = db[collection].find(array_of_conditions)
+    return [{**doc, "_id": str(doc['_id'])} for doc in docs]
+
+
+def update(db, collection, document):
+    return db[collection].find_one_and_update(
+        {'_id': ObjectId(document._id)}, document)

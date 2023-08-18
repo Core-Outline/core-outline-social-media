@@ -16,7 +16,7 @@ def fetch_data_sources():
 @data_source_controller.route('/create-data-source', methods=['POST'])
 def create_data_source():
     req = request.get_json()
-    req['type'] = 'csv'
+    req['type'] = 'social_media'
     return jsonify(str(dataSource.create(req)))
 
 

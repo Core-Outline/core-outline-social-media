@@ -14,5 +14,5 @@ class Query:
     def fetch(self, query):
         return self.queryService.fetch_query_by_parameter(query)
 
-    def execute(self, query):
-        return self.queryService.execute_query(query)
+    def instaUserEngagement(self, query):
+        return self.queryService.insta_user_engagement(query)
