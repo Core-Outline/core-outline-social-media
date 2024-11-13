@@ -52,11 +52,12 @@ def searchTopic(topic='"Adani"%20and%20"Safaricom"', tweets=pd.DataFrame(), curs
     res = conn.getresponse()
     data = res.read().decode("utf-8")
     # return res
-    cursor = json.loads(data)['cursor']['bottom']
-    if cursor in cursor_history:
-        return tweets
-    print(cursor)
+    
     try:
+        cursor = json.loads(data)['cursor']['bottom']
+        if cursor in cursor_history:
+            return tweets
+        print(cursor)
         res = [ i['content'] for i in json.loads(data)["result"]["timeline"]["instructions"][0]['entries'] if i['content']['__typename'] == 'TimelineTimelineItem']
         cursor = json.loads(data)['cursor']['bottom']
         view_count = []
@@ -143,7 +144,7 @@ def searchTopic(topic='"Adani"%20and%20"Safaricom"', tweets=pd.DataFrame(), curs
         lastDate = parser.parse(str(start_date))
         for i in df['created_at'].values:          
             if( parser.parse(start_date) > parser.parse(i).replace(tzinfo=None) ):
-                return tweets.loc[tweets['created_at'] > lastDate]
+                return tweets.loc[tweets['created_at'].to_datetime() > lastDate]
         # if len(tweets) > 0:
         #     print(f"Found {len(tweets.loc[tweets['full_text'].isin(df['full_text'])])} duplicates")
         # if len(tweets) > 0 and len(tweets.loc[tweets['full_text'].isin(df['full_text'])]) > 0 and len(tweets.loc[tweets['full_text'].isin(df['full_text'])]) == len(df):
@@ -192,10 +193,12 @@ def getUserPosts(rest_id="2455740283", cursor = None, df = pd.DataFrame(), depth
     res = conn.getresponse()
     data = res.read()
     result = json.loads(data.decode("utf-8"))
-    cursor = json.loads(data.decode("utf-8"))['cursor']['bottom']
+    
     
     depth+=1
+    print(result)
     try:
+        cursor = json.loads(data.decode("utf-8"))['cursor']['bottom']
         r1 = [ i for i in result['result']['timeline']['instructions']  if "entries" in [j for j in i.keys()] ]
         r2 = list(itertools.chain(*[ i['entries'] for i in r1 ]))
         r3 = [ i['content']['__typename'] for i in r2 ]
@@ -213,12 +216,12 @@ def getUserPosts(rest_id="2455740283", cursor = None, df = pd.DataFrame(), depth
         df = pd.concat([df,legacy])
         for i in legacy['created_at'].values:         
             if( parser.parse(start_date) > parser.parse(str(i)).replace(tzinfo=None) ):
-                return df.loc[df['created_at'] > lastDate]
+                return df.loc[df['created_at'].to_datetime() > lastDate]
         # df.to_csv("user_tweets.csv")
         # return df
         return getUserPosts(rest_id=rest_id,cursor=cursor,df=df, depth=depth)
     except Exception as e:
-        print(e)
+        print(df)
         return df
     
 def searchKeywords(topic="Adani+AND+Safaricom", tweets=pd.DataFrame(), cursor=None, start_date="2022-01-01", cursor_history=[]):
@@ -274,4 +277,8 @@ def searchKeywordsTwitter(query, start_date="2024-11-05"):
 
 def searchUserPostsTwitter(username, start_date="2024-11-05"):
     user = getUserDetails(username=username)
-    return getUserPosts(rest_id=user['rest_id'], start_date=start_date)
+    df =  getUserPosts(rest_id=user['rest_id'], start_date=start_date)
+    df['favourites_count'] = user['legacy']['favourites_count']
+    df['followers_count'] = user['legacy']['followers_count']
+    df['friends_count'] = user['legacy']['friends_count']
+    return df
