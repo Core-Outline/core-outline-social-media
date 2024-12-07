@@ -1,4 +1,4 @@
-from app_container.repositories.database import createClient, create, get, fetch
+from app_container.repositories.snowflake import createClient, create, get, fetch
 from config.data_source_config import data_source_table
 from app_container.repositories import base64
 import subprocess
@@ -16,4 +16,4 @@ class DataSourceService():
         return get(self.db, data_source_table, data_source)
 
     def fetch_data_source_by_parameter(self, data_source):
-        return get(self.db, data_source_table, data_source)
+        return fetch(self.db, data_source_table, data_source)

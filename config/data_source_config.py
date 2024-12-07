@@ -1,1 +1,1 @@
-data_source_table = 'data_sources'
+data_source_table = 'datasource'

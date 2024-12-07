@@ -63,6 +63,17 @@ def fetch(db, collection, condition):
     res = pd.read_sql(query,con=conn).to_dict(orient="records")
     return res
 
+def fetch_account_queries(db, collection, condition):
+    global conn,cur
+    query = f"""
+        SELECT * FROM {collection} 
+        INNER JOIN ORGANIZATION ON ORGANIZATION.ORGANIZATION_ID = DATA
+        WHERE {" AND ".join([ str([ j for j in condition.keys()][i])+" = " + "'"+str([j for j in condition.values()][i])+"'" for i in  range(len([ j for j in condition.keys()])) ])}
+    """
+    print(query)
+    res = pd.read_sql(query,con=conn).to_dict(orient="records")
+    return res
+
 def update(db, collection, document):
     global conn,cur
     return
