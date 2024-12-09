@@ -67,8 +67,9 @@ def fetch_account_queries(db, collection, condition):
     global conn,cur
     query = f"""
         SELECT * FROM {collection} 
-        INNER JOIN ORGANIZATION ON ORGANIZATION.ORGANIZATION_ID = DATA
+        INNER JOIN ORGANIZATION ON ORGANIZATION.ORGANIZATION_ID = DATASOURCE.ORGANIZATION_ID
         WHERE {" AND ".join([ str([ j for j in condition.keys()][i])+" = " + "'"+str([j for j in condition.values()][i])+"'" for i in  range(len([ j for j in condition.keys()])) ])}
+        AND DATASOURCE.ORGANIZATION_ID = {condition['organization_id']}
     """
     print(query)
     res = pd.read_sql(query,con=conn).to_dict(orient="records")

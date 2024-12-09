@@ -1,5 +1,7 @@
 import operator
 queries_table = 'query'
+influencer_link_table = 'influencer_link'
+
 
 query_actions = {
     'less_than': operator.lt,

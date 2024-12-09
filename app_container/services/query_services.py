@@ -1,7 +1,9 @@
 from app_container.repositories.snowflake import createClient, create, get, fetch, fetch_account_queries
-from config.query_config import query_actions, queries_table
+from config.query_config import query_actions, queries_table, influencer_link_table
+from config.rebrandly_config.import rebrandly_api, rebrandly_base_url
 from app_container.services.data_source_service import DataSourceService
 # from app_container.repositories.selenium import instagram_user_engagement
+from app_container.repositories.request import post
 import pandas as pd
 import subprocess
 
@@ -21,6 +23,7 @@ class QueryService():
     
     def fetch_queries_account(self, account):
         return fetch_account_queries(self.db, queries_table, account)
+
 
     # def insta_user_engagement(self, query):
     #     dataSourceService = DataSourceService()
